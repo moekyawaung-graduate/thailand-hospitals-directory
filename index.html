@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thailand Hospitals Directory</title>
+  <meta name="description" content="Polished Thailand hospitals directory for Myanmar patients with search, filters, compare, favorites, export, dark mode, offline support and multilingual UI." />
+  <meta name="theme-color" content="#0f62fe" />
+  <meta property="og:title" content="Thailand Hospitals Directory" />
+  <meta property="og:description" content="Find hospitals in Thailand for Myanmar patients with specialist filters, maps, compare tools, and offline support." />
+  <meta property="og:type" content="website" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href='data:image/svg+xml;utf8,
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" rx="18" fill="%230f62fe"/>
+    <path d="M45 18h10v27h27v10H55v27H45V55H18V45h27z" fill="white"/>
+  </svg>'>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+
+  <header class="hero">
+    <div class="container hero-inner">
+      <div>
+        <p class="eyebrow">Thailand Medical Guide</p>
+        <h1 id="ui-title">Thailand Hospitals Directory</h1>
+        <p id="ui-subtitle" class="hero-text">
+          Search hospitals in Thailand for Myanmar patients with specialist filters, maps, compare tools, favorites, export, and offline support.
+        </p>
+      </div>
+
+      <div class="top-toolbar">
+        <button id="langToggle" class="icon-btn" type="button" aria-label="Toggle language">မြန်မာ</button>
+        <button id="darkToggle" class="icon-btn" type="button" aria-label="Toggle dark mode">🌙</button>
+        <button id="installBtn" class="icon-btn hidden" type="button" aria-label="Install app">⬇ Install</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="mainContent" class="container">
+    <section class="notice-grid">
+      <div class="info-box">
+        <strong id="ui-important-label">Important:</strong>
+        <span id="ui-important-text">
+          Hospital contact details and specialist availability may change. Please confirm with official websites.
+        </span>
+      </div>
+
+      <div class="emergency-box">
+        <h2 id="ui-emergency-title">Emergency Notes</h2>
+        <ul id="ui-emergency-list"></ul>
+      </div>
+    </section>
+
+    <section class="summary-grid" aria-label="Summary cards">
+      <div class="summary-card">
+        <h2 id="ui-best-intl-title">Best for International Patients</h2>
+        <p>Bumrungrad, Bangkok Hospital, Samitivej, Vejthani, BNH</p>
+      </div>
+      <div class="summary-card">
+        <h2 id="ui-best-complex-title">Best for Complex Cases</h2>
+        <p>Siriraj, Chulalongkorn, Ramathibodi</p>
+      </div>
+      <div class="summary-card">
+        <h2 id="ui-best-eye-title">Best for Eye Care</h2>
+        <p>Rutnin Eye Hospital, TRSC</p>
+      </div>
+      <div class="summary-card">
+        <h2 id="ui-best-ortho-title">Best for Orthopedics / Spine</h2>
+        <p>Vejthani, Bangkok Hospital, Phyathai</p>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="Hospital statistics">
+      <div class="stat-card">
+        <span id="statTotal" class="stat-number">0</span>
+        <span id="ui-stat-total">Hospitals</span>
+      </div>
+      <div class="stat-card">
+        <span id="statCities" class="stat-number">0</span>
+        <span id="ui-stat-cities">Cities</span>
+      </div>
+      <div class="stat-card">
+        <span id="statFavorites" class="stat-number">0</span>
+        <span id="ui-stat-favorites">Favorites</span>
+      </div>
+      <div class="stat-card">
+        <span id="statCompare" class="stat-number">0</span>
+        <span id="ui-stat-compare">Compare</span>
+      </div>
+    </section>
+
+    <section class="section sticky-panel">
+      <div class="section-header">
+        <h2 id="ui-directory-title">Hospital Directory</h2>
+        <p id="ui-directory-subtitle">Search, filter, compare, save favorites, and export data.</p>
+      </div>
+
+      <div class="quick-filters" id="quickFilters"></div>
+
+      <div class="controls">
+        <label class="sr-only" for="searchInput">Search</label>
+        <input type="text" id="searchInput" placeholder="Search hospital, city, specialty..." />
+
+        <label class="sr-only" for="cityFilter">City Filter</label>
+        <select id="cityFilter">
+          <option value="all">All Cities</option>
+        </select>
+
+        <label class="sr-only" for="specialtyFilter">Specialty Filter</label>
+        <select id="specialtyFilter">
+          <option value="all">All Specialties</option>
+        </select>
+
+        <label class="sr-only" for="sortFilter">Sort</label>
+        <select id="sortFilter">
+          <option value="az">Sort: A-Z</option>
+          <option value="za">Sort: Z-A</option>
+        </select>
+
+        <button id="favoritesOnlyBtn" class="control-btn" type="button">❤ Favorites</button>
+        <button id="compareModeBtn" class="control-btn" type="button">⚖ Compare</button>
+        <button id="exportCsvBtn" class="control-btn" type="button">⬇ CSV</button>
+        <button id="exportFavBtn" class="control-btn" type="button">⬇ Favorites CSV</button>
+        <button id="printBtn" class="control-btn" type="button">🖨 Print</button>
+        <button id="clearBtn" class="control-btn danger-btn" type="button">Clear</button>
+      </div>
+
+      <div class="results-row">
+        <div id="hospitalCount" class="results-count" aria-live="polite"></div>
+        <div id="activeState" class="active-state"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div id="compareBar" class="compare-bar hidden" aria-live="polite">
+        <div>
+          <strong id="ui-compare-selected-label">Selected for compare:</strong>
+          <span id="compareCount">0</span>/3
+        </div>
+        <div class="compare-actions">
+          <button id="viewCompareBtn" class="control-btn" type="button">View Compare</button>
+          <button id="clearCompareBtn" class="control-btn" type="button">Clear Compare</button>
+        </div>
+      </div>
+
+      <div id="hospitalList" class="hospital-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2 id="ui-booking-title">How to Book</h2>
+      </div>
+
+      <div class="booking-grid">
+        <div class="booking-card">
+          <h3 id="ui-steps-title">Steps</h3>
+          <ol id="ui-steps-list"></ol>
+        </div>
+
+        <div class="booking-card">
+          <h3 id="ui-template-title">Message Template</h3>
+          <textarea id="messageTemplate" readonly></textarea>
+          <div class="card-actions">
+            <button id="copyTemplateBtn" class="control-btn" type="button">Copy Template</button>
+            <button id="shareSiteBtn" class="control-btn" type="button">Share Site</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <details class="disclaimer-box">
+        <summary id="ui-disclaimer-title">Disclaimer</summary>
+        <p id="ui-disclaimer-text"></p>
+      </details>
+    </section>
+  </main>
+
+  <div id="modalOverlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <button id="closeModal" class="close-btn" type="button" aria-label="Close details modal">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <div id="compareOverlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
+    <div class="modal large-modal">
+      <button id="closeCompareModal" class="close-btn" type="button" aria-label="Close compare modal">&times;</button>
+      <div id="compareContent"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" aria-live="assertive"></div>
+
+  <footer>
+    <div class="container">
+      <p><strong>Thailand Hospitals Directory</strong></p>
+      <p>Polished release • Search • Compare • Favorites • Export • Offline • GitHub Pages Ready</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
